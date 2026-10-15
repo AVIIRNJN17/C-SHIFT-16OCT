@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#1c1a16">
+  <meta name="description" content="Shift-wise daily work logbook for the 1.0 MTPA Pellet Plant.">
+  <title>Kumar Abhishek Ranjan — Digital Logbook</title>
+  <style>
+    :root{--bg:#f6f4ef;--paper:#fff;--ink:#24221e;--muted:#7b776e;--line:#e8e4da;--gold:#bd8b32;--gold-dark:#8c641d;--gold-pale:#f8f0df;--green:#247b56;--red:#b84235;--shadow:0 10px 32px rgba(40,33,18,.07)}
+    body.night{--bg:#141512;--paper:#20211d;--ink:#f1eee6;--muted:#b7b2a6;--line:#393a33;--gold:#d5aa58;--gold-dark:#f0ce83;--gold-pale:#393326;--green:#77c79d;--red:#f08f83;--shadow:0 10px 32px rgba(0,0,0,.24)}
+    body.night .entry{background:#24251f}body.night .entrytext{color:#e2dfd5}body.night input,body.night select,body.night textarea{background:#191a16;color:var(--ink);border-color:#4a4a41}body.night .button.secondary{background:#34352e;color:#eee9dc}body.night .button.danger{background:#432c29;color:#ffb1a6}body.night .equipchip{background:#302d24;border-color:#51472f;color:#f0d397}body.night .equipchip button{color:#e5bb69}body.night .button.ghost{border-color:#675537;color:#edcc84}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+    button,input,select,textarea{font:inherit}button{cursor:pointer}
+    .top{background:#1c1a16;color:#fff;padding:22px max(20px,calc((100vw - 1160px)/2));border-bottom:3px solid var(--gold)}
+    .topinner{max-width:1160px;margin:auto;display:flex;align-items:center;gap:16px}
+    .mark{width:56px;height:56px;flex:none;border:2px solid #d6aa5a;border-radius:50%;display:grid;place-items:center;color:#e6bf72;font-family:Georgia,serif;font-size:30px;font-weight:700;position:relative;box-shadow:inset 0 0 0 4px #1c1a16,inset 0 0 0 5px #80612e}
+    .brandimg{width:56px;height:56px;flex:none;border-radius:50%;object-fit:cover;display:none}
+    .eyebrow{margin:0 0 2px;color:#c5b99f;font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}
+    h1{margin:0;color:#f8edda;font-family:Georgia,"Times New Roman",serif;font-size:clamp(22px,4vw,34px);font-weight:600;letter-spacing:.01em;line-height:1.15}
+    .sub{margin:6px 0 0;color:#c4beb2;font-size:12px;letter-spacing:.05em}
+    .wrap{max-width:1160px;margin:auto;padding:22px 20px 48px}
+    .nav{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border-bottom:1px solid var(--line);margin-bottom:20px;padding-bottom:12px}
+    .tab{background:transparent;border:0;color:var(--muted);padding:9px 15px;border-radius:10px;font-weight:700}
+    .tab.active{background:var(--gold-pale);color:var(--gold-dark)}
+    .navspacer{flex:1}
+    .button{border:0;border-radius:10px;padding:10px 15px;background:var(--gold);color:white;font-weight:750;box-shadow:0 4px 10px rgba(189,139,50,.18)}
+    .button:hover{background:#a77928}.button.secondary{background:#f0ede6;color:#4b463b;box-shadow:none}.button.danger{background:#fff0ee;color:var(--red);box-shadow:none}
+    .button.small{padding:7px 10px;font-size:13px}.button.ghost{background:transparent;color:var(--gold-dark);box-shadow:none;border:1px solid #e5d5b4}
+    .view{display:none}.view.active{display:block}
+    .sectionhead{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin:4px 0 16px}
+    h2{margin:0;font-family:Georgia,serif;font-size:25px;font-weight:600}
+    .hint{margin:4px 0 0;color:var(--muted);font-size:13px}
+    .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:18px}
+    .stat,.card,.formpanel{background:var(--paper);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+    .stat{padding:17px 18px}.statlabel{color:var(--muted);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}.statnum{margin-top:3px;font-family:Georgia,serif;font-size:30px}.statnote{color:var(--muted);font-size:12px}
+    .paneltitle{display:flex;justify-content:space-between;align-items:center;padding:17px 18px;border-bottom:1px solid var(--line)}.paneltitle h3{margin:0;font-size:16px}
+    .list{display:grid;gap:12px;padding:14px}
+    .entry{border:1px solid var(--line);border-radius:13px;padding:15px;background:#fff}
+    .entrytop{display:flex;align-items:flex-start;gap:12px}.entrymain{flex:1;min-width:0}.entrytitle{font-weight:800;font-size:15px;margin:0}.entrymeta{color:var(--muted);font-size:12px;margin:4px 0 9px}
+    .entrytext{white-space:pre-wrap;overflow-wrap:anywhere;margin:0;color:#49463f}.entryremarks{margin-top:8px;color:var(--muted);font-size:13px}
+    .entryactions{display:flex;gap:6px;flex:none}.badge{display:inline-flex;align-items:center;padding:4px 9px;border-radius:30px;background:var(--gold-pale);color:var(--gold-dark);font-size:11px;font-weight:800}
+    .photo{max-width:180px;max-height:110px;object-fit:cover;border-radius:9px;margin-top:10px;border:1px solid var(--line)}
+    .empty{padding:35px 15px;text-align:center;color:var(--muted)}.empty strong{display:block;color:var(--ink);font-size:16px;margin-bottom:4px}
+    .filters{display:flex;flex-wrap:wrap;gap:9px;margin:0 0 13px}.filters input,.filters select{min-width:145px}
+    .formpanel{padding:20px;max-width:850px}.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:13px;font-weight:750}
+    input,select,textarea{width:100%;border:1px solid #dcd7cb;border-radius:9px;background:#fff;padding:10px 11px;color:var(--ink);outline:none}
+    input:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(189,139,50,.14)}
+    textarea{min-height:110px;resize:vertical}.row{display:flex;gap:8px;align-items:center}.row input{flex:1}
+    .formactions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}.equipmanage{margin-top:22px;padding-top:17px;border-top:1px solid var(--line)}
+    .equiplist{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.equipchip{display:inline-flex;align-items:center;gap:8px;border:1px solid #e7dbc3;background:#fbf7ee;border-radius:30px;padding:6px 10px;color:#5a4b30;font-size:13px}
+    .equipchip button{border:0;background:transparent;color:#966d29;font-size:17px;line-height:1;padding:0}
+    .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#24221e;color:#fff;padding:10px 16px;border-radius:9px;transition:.2s;z-index:10}.toast.show{opacity:1;transform:translate(-50%,0)}
+    .footnote{color:var(--muted);font-size:12px;margin-top:16px}
+    .printhead{display:none}
+    @media(max-width:680px){.top{padding:18px 16px}.mark,.brandimg{width:48px;height:48px}.wrap{padding:17px 14px 35px}.nav{gap:4px}.tab{padding:8px 11px}.stats{gap:8px}.stat{padding:13px 11px}.statnum{font-size:25px}.statlabel{font-size:10px}.sectionhead{align-items:flex-start}.formpanel{padding:16px}.entrytop{flex-wrap:wrap}.entryactions{width:100%;padding-left:0}.entryactions .button{flex:1}.filters input,.filters select{flex:1;min-width:120px}}
+    @media(max-width:430px){.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:1/-1}.sub{font-size:11px}.nav .button{padding:8px 10px;font-size:13px}}
+    @media print{:root{--bg:#fff;--paper:#fff;--ink:#222;--muted:#555;--line:#bbb;--gold-dark:#725119;--gold-pale:#f5f1e7;--shadow:none}body{background:white;color:#222;font-size:12px}body.night .entry{background:white}body.night .entrytext{color:#222}body.night .entryremarks{color:#555}.top,.nav,.filters,.no-print,.entryactions,.footnote{display:none!important}.wrap{max-width:none;padding:0}.view{display:none!important}#dashboard.view.active,#logbook.view.active{display:block!important}.card,.stat{box-shadow:none;border:1px solid #bbb}.printhead{display:block;margin:0 0 16px;padding-bottom:10px;border-bottom:2px solid #b58a43}.printhead h1{font-size:21px;color:#222}.printhead p{margin:4px 0}.stats{grid-template-columns:repeat(3,1fr)}.entry{break-inside:avoid}.list{padding:8px}.entry{padding:10px}.photo{max-width:130px;max-height:80px}}
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="topinner">
+      <div class="mark" id="fallbackMark" aria-label="Rungta Mines Limited logo">R</div>
+      <img class="brandimg" id="brandLogo" src="https://www.jaishreeinfra.com/client%20company%20logo/RUNGTA%20MINES.jpg" alt="Rungta Mines Limited logo">
+      <div>
+        <p class="eyebrow">1.0 MTPA Pellet Plant</p>
+        <h1>Kumar Abhishek Ranjan<br>Digital Logbook</h1>
+        <p class="sub">Rungta Mines Limited · Shift-wise Work Report</p>
+      </div>
+    </div>
+  </header>
+  <main class="wrap">
+    <nav class="nav no-print" aria-label="Main navigation">
+      <button class="tab active" data-view="dashboard">Dashboard</button>
+      <button class="tab" data-view="logbook">Logbook</button>
+      <span class="navspacer"></span>
+      <button class="button secondary small" id="themeToggle" type="button" aria-pressed="false">☾ Night Mode</button>
+      <button class="button small" id="newEntry">+ New Entry</button>
+    </nav>
+
+    <section class="view active" id="dashboard">
+      <div class="printhead"><h1>Kumar Abhishek Ranjan Digital Logbook</h1><p>1.0 MTPA Pellet Plant · Rungta Mines Limited</p></div>
+      <div class="sectionhead"><div><h2>Dashboard</h2><p class="hint">Shift ka kaam ek jagah par dekhein.</p></div><button class="button no-print" id="dashboardNew">+ New Entry</button></div>
+      <div class="stats">
+        <div class="stat"><div class="statlabel">Total Entries</div><div class="statnum" id="totalCount">0</div><div class="statnote">Is device ke logbook mein</div></div>
+        <div class="stat"><div class="statlabel">Today</div><div class="statnum" id="todayCount">0</div><div class="statnote" id="todayLabel">Aaj ki entries</div></div>
+        <div class="stat"><div class="statlabel">Equipment</div><div class="statnum" id="equipmentCount">0</div><div class="statnote">Manageable equipment list</div></div>
+      </div>
+      <div class="card">
+        <div class="paneltitle"><h3>Recent Shift Entries</h3><button class="button ghost small no-print" id="seeAll">View Logbook</button></div>
+        <div class="list" id="recentList"></div>
+      </div>
+    </section>
+
+    <section class="view" id="logbook">
+      <div class="printhead"><h1>Kumar Abhishek Ranjan Digital Logbook</h1><p>1.0 MTPA Pellet Plant · Rungta Mines Limited</p></div>
+      <div class="sectionhead"><div><h2>Shift Logbook</h2><p class="hint">Date, shift aur equipment ke hisaab se report save karein.</p></div></div>
+      <div class="filters no-print">
+        <input type="date" id="filterDate" aria-label="Filter by date">
+        <select id="filterShift" aria-label="Filter by shift"><option value="">All shifts</option><option>A</option><option>B</option><option>C</option><option>General</option></select>
+        <select id="filterEquipment" aria-label="Filter by equipment"><option value="">All equipment</option></select>
+        <input type="search" id="searchText" placeholder="Search entries">
+        <button class="button secondary small" id="clearFilters">Clear</button>
+      </div>
+      <div class="formactions no-print" style="margin:0 0 13px">
+        <button class="button small" id="printButton">Print / Save PDF</button>
+        <button class="button secondary small" id="whatsappButton">Share on WhatsApp</button>
+        <button class="button secondary small" id="backupButton">Download Backup</button>
+        <label class="button secondary small" for="restoreFile">Restore Backup</label><input class="no-print" type="file" id="restoreFile" accept="application/json" style="display:none">
+      </div>
+      <div class="card"><div class="list" id="entryList"></div></div>
+      <p class="footnote">Entries is browser mein save hoti hain. Data ko doosre phone par le jaane ke liye Download Backup use karein.</p>
+    </section>
+
+    <section class="view" id="editor">
+      <div class="sectionhead"><div><h2 id="formTitle">New Shift Entry</h2><p class="hint">Apne shift ka kaam aur observation likhein.</p></div></div>
+      <div class="formpanel">
+        <form id="entryForm">
+          <div class="formgrid">
+            <div class="field"><label for="entryDate">Date</label><input type="date" id="entryDate" required></div>
+            <div class="field"><label for="entryShift">Shift</label><select id="entryShift" required><option value="">Select shift</option><option>A</option><option>B</option><option>C</option><option>General</option></select></div>
+            <div class="field"><label for="entryEquipment">Equipment / Area</label><select id="entryEquipment" required></select></div>
+            <div class="field"><label for="entryType">Entry Type</label><select id="entryType"><option>Routine Work</option><option>Inspection</option><option>Maintenance</option><option>Breakdown</option><option>Safety</option><option>Other</option></select></div>
+            <div class="field full"><label for="entryWork">Daily Work / Observation</label><textarea id="entryWork" placeholder="Is shift mein kiya gaya kaam ya dekhi gayi problem likhein..." required></textarea></div>
+            <div class="field full"><label for="entryRemarks">Action / Remarks (optional)</label><textarea id="entryRemarks" style="min-height:72px" placeholder="Action taken, pending work, ya handover note"></textarea></div>
+            <div class="field full"><label for="entryPhoto">Photo (optional)</label><input type="file" id="entryPhoto" accept="image/*"><small class="hint">Photo chhoti karke save hogi. Edit karte waqt nayi photo select karne par purani replace hogi.</small><div id="photoPreview"></div></div>
+          </div>
+          <div class="formactions"><button class="button" type="submit" id="saveButton">Save Entry</button><button class="button secondary" type="button" id="cancelEdit">Cancel</button></div>
+        </form>
+        <div class="equipmanage">
+          <strong>Equipment List</strong><p class="hint">Naya equipment add karein ya list se hata dein.</p>
+          <div class="row"><input id="newEquipment" placeholder="Equipment ka naam"><button class="button secondary small" id="addEquipment" type="button">Add</button></div>
+          <div class="equiplist" id="equipmentList"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div class="toast" id="toast" role="status"></div>
+  <script>
+    (function(){
+      const KEY="k ar digital logbook v1";
+      const THEME_KEY="k ar digital logbook theme";
+      const DEFAULT_EQUIPMENT=["TG","Kiln","Cooler","Balling Disc"];
+      let data=loadData(), editingId=null, photoDraft=null;
+      const $=id=>document.getElementById(id);
+      const today=()=>{const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)};
+      function normalizeData(x){const rows=Array.isArray(x)?x:x.entries;if(!Array.isArray(rows))throw new Error("Invalid backup");const entries=rows.map(e=>({...e,equipment:e.equipment||e.area||"TG",shift:e.shift==="G"?"General":e.shift}));const equipment=[...new Set([...(Array.isArray(x.equipment)?x.equipment:DEFAULT_EQUIPMENT),...entries.map(e=>e.equipment)])];return{entries,equipment:equipment.length?equipment:DEFAULT_EQUIPMENT.slice()}}
+      function loadData(){try{const current=localStorage.getItem(KEY);if(current)return normalizeData(JSON.parse(current));const legacy=JSON.parse(localStorage.getItem("abhishek-work-digital-report-v1")||"[]");const equipment=JSON.parse(localStorage.getItem("abhishek-work-equipment-v1")||"[]");return normalizeData({entries:legacy,equipment:[...DEFAULT_EQUIPMENT,...equipment]})}catch(e){return{entries:[],equipment:DEFAULT_EQUIPMENT.slice()}}}
+      function saveData(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+      function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+      function niceDate(s){if(!s)return"";return new Date(s+"T12:00:00").toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})}
+      function notify(s){const t=$("toast");t.textContent=s;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)}
+      function setTheme(night){document.body.classList.toggle("night",night);$("themeToggle").textContent=night?"☀ Day Mode":"☾ Night Mode";$("themeToggle").setAttribute("aria-pressed",String(night));localStorage.setItem(THEME_KEY,night?"night":"day")}
+      function show(view){document.querySelectorAll(".view").forEach(x=>x.classList.toggle("active",x.id===view));document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.view===view));if(view==="editor")document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));window.scrollTo({top:0,behavior:"smooth"})}
+      function fillEquipment(){const e=$("entryEquipment"),f=$("filterEquipment"),keep=e.value,keepFilter=f.value;e.innerHTML=data.equipment.map(x=>'<option value="'+esc(x)+'">'+esc(x)+'</option>').join("");if(keep&&data.equipment.includes(keep))e.value=keep;f.innerHTML='<option value="">All equipment</option>'+data.equipment.map(x=>'<option value="'+esc(x)+'">'+esc(x)+'</option>').join("");f.value=keepFilter;$("equipmentList").innerHTML=data.equipment.map((x,i)=>'<span class="equipchip">'+esc(x)+'<button type="button" aria-label="Remove '+esc(x)+'" data-remove="'+i+'">×</button></span>').join("")}
+      function entryMarkup(e){return '<article class="entry"><div class="entrytop"><div class="entrymain"><p class="entrytitle">'+esc(e.equipment)+' <span class="badge">'+esc(e.type||"Routine Work")+'</span></p><p class="entrymeta">'+niceDate(e.date)+' · Shift '+esc(e.shift)+'</p></div><div class="entryactions no-print"><button class="button ghost small" data-edit="'+e.id+'">Edit</button><button class="button danger small" data-delete="'+e.id+'">Delete</button></div></div><p class="entrytext">'+esc(e.work)+'</p>'+(e.remarks?'<p class="entryremarks"><strong>Remarks:</strong> '+esc(e.remarks)+'</p>':"")+(e.photo?'<img class="photo" src="'+e.photo+'" alt="Attached report photo">':"")+'</article>'}
+      function filtered(){const date=$("filterDate").value,shift=$("filterShift").value,equip=$("filterEquipment").value,q=$("searchText").value.trim().toLowerCase();return data.entries.filter(x=>(!date||x.date===date)&&(!shift||x.shift===shift)&&(!equip||x.equipment===equip)&&(!q||(x.work+" "+x.remarks+" "+x.equipment+" "+x.type).toLowerCase().includes(q))).sort((a,b)=>(b.date||"").localeCompare(a.date||"")||(b.updatedAt||"").localeCompare(a.updatedAt||""))}
+      function render(){fillEquipment();$("totalCount").textContent=data.entries.length;$("todayCount").textContent=data.entries.filter(x=>x.date===today()).length;$("todayLabel").textContent=new Date().toLocaleDateString("en-IN",{weekday:"short",day:"2-digit",month:"short"});$("equipmentCount").textContent=data.equipment.length;const recent=data.entries.slice().sort((a,b)=>(b.date||"").localeCompare(a.date||"")||(b.updatedAt||"").localeCompare(a.updatedAt||"")).slice(0,4);$("recentList").innerHTML=recent.length?recent.map(entryMarkup).join(""):'<div class="empty"><strong>Abhi koi entry nahi hai</strong>+ New Entry dabakar pehli shift report likhein.</div>';const list=filtered();$("entryList").innerHTML=list.length?list.map(entryMarkup).join(""):'<div class="empty"><strong>Koi matching report nahi</strong>Filter badlein ya nayi entry banayein.</div>'}
+      function resetForm(){editingId=null;photoDraft=null;$("entryForm").reset();$("entryDate").value=today();$("photoPreview").innerHTML="";$("formTitle").textContent="New Shift Entry";$("saveButton").textContent="Save Entry"}
+      function editEntry(id){const x=data.entries.find(e=>e.id===id);if(!x)return;editingId=id;photoDraft=x.photo||null;$("entryDate").value=x.date;$("entryShift").value=x.shift;$("entryEquipment").value=x.equipment;$("entryType").value=x.type||"Routine Work";$("entryWork").value=x.work;$("entryRemarks").value=x.remarks||"";$("photoPreview").innerHTML=photoDraft?'<img class="photo" src="'+photoDraft+'" alt="Current report photo">':"";$("formTitle").textContent="Edit Shift Entry";$("saveButton").textContent="Save Changes";show("editor")}
+      function summaryText(rows){if(!rows.length)return"Digital Logbook — koi report select nahi hai.";let out=["KUMAR ABHISHEK RANJAN DIGITAL LOGBOOK","1.0 MTPA Pellet Plant | Rungta Mines Limited","Shift-wise work report",""];rows.forEach((e,i)=>{out.push((i+1)+". "+niceDate(e.date)+" | Shift "+e.shift+" | "+e.equipment+" | "+(e.type||"Routine Work"));out.push("Work: "+e.work);if(e.remarks)out.push("Remarks: "+e.remarks);out.push("")});return out.join("\n")}
+      function actionFor(button){if(button.dataset.edit){editEntry(button.dataset.edit);return}if(button.dataset.delete){if(confirm("Is report ko delete karein?")){data.entries=data.entries.filter(e=>e.id!==button.dataset.delete);saveData();notify("Entry delete ho gayi")}}}
+      document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
+      $("newEntry").onclick=$("dashboardNew").onclick=()=>{resetForm();show("editor")};$("seeAll").onclick=()=>show("logbook");
+      document.addEventListener("click",e=>{const b=e.target.closest("[data-edit],[data-delete]");if(b)actionFor(b)});
+      $("entryForm").addEventListener("submit",e=>{e.preventDefault();const wasEditing=!!editingId;const row={id:editingId||("entry-"+Date.now()),date:$("entryDate").value,shift:$("entryShift").value,equipment:$("entryEquipment").value,type:$("entryType").value,work:$("entryWork").value.trim(),remarks:$("entryRemarks").value.trim(),photo:photoDraft,updatedAt:new Date().toISOString()};if(editingId)data.entries=data.entries.map(x=>x.id===editingId?row:x);else data.entries.unshift(row);saveData();resetForm();show("logbook");notify(wasEditing?"Changes save ho gaye":"Entry save ho gayi")});
+      $("cancelEdit").onclick=()=>{resetForm();show("dashboard")};
+      $("themeToggle").onclick=()=>setTheme(!document.body.classList.contains("night"));
+      $("entryPhoto").addEventListener("change",e=>{const f=e.target.files&&e.target.files[0];if(!f)return;if(!f.type.startsWith("image/")){notify("Image file select karein");return}const reader=new FileReader();reader.onload=()=>{const im=new Image();im.onload=()=>{const scale=Math.min(1,1000/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*scale);c.height=Math.round(im.height*scale);c.getContext("2d").drawImage(im,0,0,c.width,c.height);photoDraft=c.toDataURL("image/jpeg",.72);$("photoPreview").innerHTML='<img class="photo" src="'+photoDraft+'" alt="Photo preview">'};im.src=reader.result};reader.readAsDataURL(f)});
+      $("addEquipment").onclick=()=>{const n=$("newEquipment").value.trim();if(!n){notify("Equipment ka naam likhein");return}if(data.equipment.some(x=>x.toLowerCase()===n.toLowerCase())){notify("Ye equipment list mein pehle se hai");return}data.equipment.push(n);$("newEquipment").value="";saveData();notify("Equipment add ho gaya")};
+      $("newEquipment").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("addEquipment").click()}});
+      $("equipmentList").addEventListener("click",e=>{const b=e.target.closest("[data-remove]");if(!b)return;if(data.equipment.length<=1){notify("Kam se kam ek equipment list mein rakhein");return}const i=Number(b.dataset.remove),name=data.equipment[i];if(data.entries.some(x=>x.equipment===name)){if(!confirm(name+" par saved reports hain. Equipment list se hatayein? Purani reports mein naam rahega."))return}data.equipment.splice(i,1);saveData()});
+      ["filterDate","filterShift","filterEquipment","searchText"].forEach(id=>$(id).addEventListener("input",render));
+      $("clearFilters").onclick=()=>{$("filterDate").value="";$("filterShift").value="";$("filterEquipment").value="";$("searchText").value="";render()};
+      $("printButton").onclick=()=>{show("logbook");setTimeout(()=>window.print(),120)};
+      $("whatsappButton").onclick=()=>{const rows=filtered();if(!rows.length){notify("Share karne ke liye report nahi mili");return}const text=encodeURIComponent(summaryText(rows));window.open("https://wa.me/?text="+text,"_blank","noopener")};
+      $("backupButton").onclick=()=>{const blob=new Blob([JSON.stringify({app:"Kumar Abhishek Ranjan Digital Logbook",exportedAt:new Date().toISOString(),...data},null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="pellet-plant-logbook-backup-"+today()+".json";a.click();URL.revokeObjectURL(a.href)};
+      $("restoreFile").onchange=e=>{const f=e.target.files&&e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);const restored=normalizeData(x);if(confirm("Backup restore karne par is browser ka current logbook replace hoga. Continue?")){data=restored;saveData();notify("Backup restore ho gaya")}}catch(err){notify("Valid logbook backup select karein")}e.target.value=""};r.readAsText(f)};
+      $("brandLogo").onload=()=>{$("brandLogo").style.display="block";$("fallbackMark").style.display="none"};
+      $("brandLogo").onerror=()=>{$("brandLogo").style.display="none";$("fallbackMark").style.display="grid"};
+      setTheme(localStorage.getItem(THEME_KEY)==="night");$("entryDate").value=today();render();
+    })();
+  </script>
+</body>
+</html>
