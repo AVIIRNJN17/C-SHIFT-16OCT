@@ -81,11 +81,11 @@
 
     <section class="view active" id="dashboard">
       <div class="printhead"><h1>Kumar Abhishek Ranjan Digital Logbook</h1><p>1.0 MTPA Pellet Plant · Rungta Mines Limited</p></div>
-      <div class="sectionhead"><div><h2>Dashboard</h2><p class="hint">Shift ka kaam ek jagah par dekhein.</p></div><button class="button no-print" id="dashboardNew">+ New Entry</button></div>
+      <div class="sectionhead"><div><h2>Dashboard</h2></div><button class="button no-print" id="dashboardNew">+ New Entry</button></div>
       <div class="stats">
-        <div class="stat"><div class="statlabel">Total Entries</div><div class="statnum" id="totalCount">0</div><div class="statnote">Is device ke logbook mein</div></div>
+        <div class="stat"><div class="statlabel">Total Entries</div><div class="statnum" id="totalCount">0</div></div>
         <div class="stat"><div class="statlabel">Today</div><div class="statnum" id="todayCount">0</div><div class="statnote" id="todayLabel">Aaj ki entries</div></div>
-        <div class="stat"><div class="statlabel">Equipment</div><div class="statnum" id="equipmentCount">0</div><div class="statnote">Manageable equipment list</div></div>
+        <div class="stat"><div class="statlabel">Equipment</div><div class="statnum" id="equipmentCount">0</div></div>
       </div>
       <div class="card">
         <div class="paneltitle"><h3>Recent Shift Entries</h3><button class="button ghost small no-print" id="seeAll">View Logbook</button></div>
@@ -95,7 +95,7 @@
 
     <section class="view" id="logbook">
       <div class="printhead"><h1>Kumar Abhishek Ranjan Digital Logbook</h1><p>1.0 MTPA Pellet Plant · Rungta Mines Limited</p></div>
-      <div class="sectionhead"><div><h2>Shift Logbook</h2><p class="hint">Date, shift aur equipment ke hisaab se report save karein.</p></div></div>
+      <div class="sectionhead"><div><h2>Shift Logbook</h2></div></div>
       <div class="filters no-print">
         <input type="date" id="filterDate" aria-label="Filter by date">
         <select id="filterShift" aria-label="Filter by shift"><option value="">All shifts</option><option>A</option><option>B</option><option>C</option><option>General</option></select>
@@ -110,11 +110,11 @@
         <label class="button secondary small" for="restoreFile">Restore Backup</label><input class="no-print" type="file" id="restoreFile" accept="application/json" style="display:none">
       </div>
       <div class="card"><div class="list" id="entryList"></div></div>
-      <p class="footnote">Entries is browser mein save hoti hain. Data ko doosre phone par le jaane ke liye Download Backup use karein.</p>
+      
     </section>
 
     <section class="view" id="editor">
-      <div class="sectionhead"><div><h2 id="formTitle">New Shift Entry</h2><p class="hint">Apne shift ka kaam aur observation likhein.</p></div></div>
+      <div class="sectionhead"><div><h2 id="formTitle">New Shift Entry</h2></div></div>
       <div class="formpanel">
         <form id="entryForm">
           <div class="formgrid">
@@ -122,15 +122,15 @@
             <div class="field"><label for="entryShift">Shift</label><select id="entryShift" required><option value="">Select shift</option><option>A</option><option>B</option><option>C</option><option>General</option></select></div>
             <div class="field"><label for="entryEquipment">Equipment / Area</label><select id="entryEquipment" required></select></div>
             <div class="field"><label for="entryType">Entry Type</label><select id="entryType"><option>Routine Work</option><option>Inspection</option><option>Maintenance</option><option>Breakdown</option><option>Safety</option><option>Other</option></select></div>
-            <div class="field full"><label for="entryWork">Daily Work / Observation</label><textarea id="entryWork" placeholder="Is shift mein kiya gaya kaam ya dekhi gayi problem likhein..." required></textarea></div>
-            <div class="field full"><label for="entryRemarks">Action / Remarks (optional)</label><textarea id="entryRemarks" style="min-height:72px" placeholder="Action taken, pending work, ya handover note"></textarea></div>
-            <div class="field full"><label for="entryPhoto">Photo (optional)</label><input type="file" id="entryPhoto" accept="image/*"><small class="hint">Photo chhoti karke save hogi. Edit karte waqt nayi photo select karne par purani replace hogi.</small><div id="photoPreview"></div></div>
+            <div class="field full"><label for="entryWork">Daily Work / Observation</label><textarea id="entryWork" placeholder="Work / Observation" required></textarea></div>
+            <div class="field full"><label for="entryRemarks">Action / Remarks (optional)</label><textarea id="entryRemarks" style="min-height:72px" placeholder="Remarks / Handover"></textarea></div>
+            <div class="field full"><label for="entryPhoto">Photo (optional)</label><input type="file" id="entryPhoto" accept="image/*"><div id="photoPreview"></div></div>
           </div>
           <div class="formactions"><button class="button" type="submit" id="saveButton">Save Entry</button><button class="button secondary" type="button" id="cancelEdit">Cancel</button></div>
         </form>
         <div class="equipmanage">
-          <strong>Equipment List</strong><p class="hint">Naya equipment add karein ya list se hata dein.</p>
-          <div class="row"><input id="newEquipment" placeholder="Equipment ka naam"><button class="button secondary small" id="addEquipment" type="button">Add</button></div>
+          <strong>Equipment List</strong>
+          <div class="row"><input id="newEquipment" placeholder="Equipment name"><button class="button secondary small" id="addEquipment" type="button">Add</button></div>
           <div class="equiplist" id="equipmentList"></div>
         </div>
       </div>
@@ -156,7 +156,7 @@
       function fillEquipment(){const e=$("entryEquipment"),f=$("filterEquipment"),keep=e.value,keepFilter=f.value;e.innerHTML=data.equipment.map(x=>'<option value="'+esc(x)+'">'+esc(x)+'</option>').join("");if(keep&&data.equipment.includes(keep))e.value=keep;f.innerHTML='<option value="">All equipment</option>'+data.equipment.map(x=>'<option value="'+esc(x)+'">'+esc(x)+'</option>').join("");f.value=keepFilter;$("equipmentList").innerHTML=data.equipment.map((x,i)=>'<span class="equipchip">'+esc(x)+'<button type="button" aria-label="Remove '+esc(x)+'" data-remove="'+i+'">×</button></span>').join("")}
       function entryMarkup(e){return '<article class="entry"><div class="entrytop"><div class="entrymain"><p class="entrytitle">'+esc(e.equipment)+' <span class="badge">'+esc(e.type||"Routine Work")+'</span></p><p class="entrymeta">'+niceDate(e.date)+' · Shift '+esc(e.shift)+'</p></div><div class="entryactions no-print"><button class="button ghost small" data-edit="'+e.id+'">Edit</button><button class="button danger small" data-delete="'+e.id+'">Delete</button></div></div><p class="entrytext">'+esc(e.work)+'</p>'+(e.remarks?'<p class="entryremarks"><strong>Remarks:</strong> '+esc(e.remarks)+'</p>':"")+(e.photo?'<img class="photo" src="'+e.photo+'" alt="Attached report photo">':"")+'</article>'}
       function filtered(){const date=$("filterDate").value,shift=$("filterShift").value,equip=$("filterEquipment").value,q=$("searchText").value.trim().toLowerCase();return data.entries.filter(x=>(!date||x.date===date)&&(!shift||x.shift===shift)&&(!equip||x.equipment===equip)&&(!q||(x.work+" "+x.remarks+" "+x.equipment+" "+x.type).toLowerCase().includes(q))).sort((a,b)=>(b.date||"").localeCompare(a.date||"")||(b.updatedAt||"").localeCompare(a.updatedAt||""))}
-      function render(){fillEquipment();$("totalCount").textContent=data.entries.length;$("todayCount").textContent=data.entries.filter(x=>x.date===today()).length;$("todayLabel").textContent=new Date().toLocaleDateString("en-IN",{weekday:"short",day:"2-digit",month:"short"});$("equipmentCount").textContent=data.equipment.length;const recent=data.entries.slice().sort((a,b)=>(b.date||"").localeCompare(a.date||"")||(b.updatedAt||"").localeCompare(a.updatedAt||"")).slice(0,4);$("recentList").innerHTML=recent.length?recent.map(entryMarkup).join(""):'<div class="empty"><strong>Abhi koi entry nahi hai</strong>+ New Entry dabakar pehli shift report likhein.</div>';const list=filtered();$("entryList").innerHTML=list.length?list.map(entryMarkup).join(""):'<div class="empty"><strong>Koi matching report nahi</strong>Filter badlein ya nayi entry banayein.</div>'}
+      function render(){fillEquipment();$("totalCount").textContent=data.entries.length;$("todayCount").textContent=data.entries.filter(x=>x.date===today()).length;$("todayLabel").textContent=new Date().toLocaleDateString("en-IN",{weekday:"short",day:"2-digit",month:"short"});$("equipmentCount").textContent=data.equipment.length;const recent=data.entries.slice().sort((a,b)=>(b.date||"").localeCompare(a.date||"")||(b.updatedAt||"").localeCompare(a.updatedAt||"")).slice(0,4);$("recentList").innerHTML=recent.length?recent.map(entryMarkup).join(""):'<div class="empty"><strong>No entries yet</strong></div>';const list=filtered();$("entryList").innerHTML=list.length?list.map(entryMarkup).join(""):'<div class="empty"><strong>No matching entries</strong></div>'}
       function resetForm(){editingId=null;photoDraft=null;$("entryForm").reset();$("entryDate").value=today();$("photoPreview").innerHTML="";$("formTitle").textContent="New Shift Entry";$("saveButton").textContent="Save Entry"}
       function editEntry(id){const x=data.entries.find(e=>e.id===id);if(!x)return;editingId=id;photoDraft=x.photo||null;$("entryDate").value=x.date;$("entryShift").value=x.shift;$("entryEquipment").value=x.equipment;$("entryType").value=x.type||"Routine Work";$("entryWork").value=x.work;$("entryRemarks").value=x.remarks||"";$("photoPreview").innerHTML=photoDraft?'<img class="photo" src="'+photoDraft+'" alt="Current report photo">':"";$("formTitle").textContent="Edit Shift Entry";$("saveButton").textContent="Save Changes";show("editor")}
       function summaryText(rows){if(!rows.length)return"Digital Logbook — koi report select nahi hai.";let out=["KUMAR ABHISHEK RANJAN DIGITAL LOGBOOK","1.0 MTPA Pellet Plant | Rungta Mines Limited","Shift-wise work report",""];rows.forEach((e,i)=>{out.push((i+1)+". "+niceDate(e.date)+" | Shift "+e.shift+" | "+e.equipment+" | "+(e.type||"Routine Work"));out.push("Work: "+e.work);if(e.remarks)out.push("Remarks: "+e.remarks);out.push("")});return out.join("\n")}
